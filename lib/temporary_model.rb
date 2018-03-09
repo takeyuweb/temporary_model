@@ -1,5 +1,5 @@
-require "temporary_model/railtie"
-
 module TemporaryModel
-  # Your code goes here...
+  extend ActiveSupport::Autoload
+  autoload :TestHelper
+  autoload :Record
 end

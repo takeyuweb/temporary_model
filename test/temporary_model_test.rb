@@ -1,7 +1,55 @@
 require 'test_helper'
 
 class TemporaryModel::Test < ActiveSupport::TestCase
-  test "truth" do
-    assert_kind_of Module, TemporaryModel
+  temporary_model 'Tag' do
+    define_table do |t|
+      t.string :name, default: '', null: false
+    end
+
+    has_many :taggings, dependent: :destroy
+    has_many :posts, through: :taggings, source: :taggable, source_type: 'Post'
+
+    validates :name, presence: true
+  end
+
+  temporary_model 'Post' do
+    define_table do |t|
+      t.string :title, default: '', null: false
+    end
+
+    has_many :taggings, as: :taggable, dependent: :destroy
+    has_many :tags, through: :taggings, source: :tag
+
+    validates :title, presence: true
+
+    def tag_names
+      tags.pluck(:name)
+    end
+  end
+
+  temporary_model 'Tagging' do
+    define_table do |t|
+      t.references :tag, foreign_key: true
+      t.references :taggable, polymorphic: true
+    end
+
+    belongs_to :tag
+    belongs_to :taggable, polymorphic: true
+  end
+
+  test 'You can define and use temporary classes' do
+    ruby = Post.new(title: 'Ruby')
+    ruby.tags << Tag.create(name: 'Programming_Language')
+    ruby.tags << Tag.create(name: 'Dynamic_Typing')
+    ruby.save!
+
+    rust = Post.new(title: 'Rust')
+    rust.tags << Tag.create(name: 'Programming_Language')
+    rust.tags << Tag.create(name: 'Static_Typing')
+    rust.save!
+
+    assert_equal 'Ruby', ruby.title
+    assert_equal %w[Programming_Language Dynamic_Typing], ruby.tag_names
+    assert_equal [rust], Tag.find_by(name: 'Static_Typing').posts
   end
 end
