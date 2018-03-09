@@ -38,15 +38,13 @@ class TemporaryModel::Test < ActiveSupport::TestCase
   end
 
   test 'You can define and use temporary classes' do
-    ruby = Post.new(title: 'Ruby')
-    ruby.tags << Tag.create(name: 'Programming_Language')
-    ruby.tags << Tag.create(name: 'Dynamic_Typing')
-    ruby.save!
+    ruby = Post.create!(title: 'Ruby')
+    ruby.taggings.create!(tag: Tag.create(name: 'Programming_Language'))
+    ruby.taggings.create!(tag: Tag.create(name: 'Dynamic_Typing'))
 
-    rust = Post.new(title: 'Rust')
-    rust.tags << Tag.create(name: 'Programming_Language')
-    rust.tags << Tag.create(name: 'Static_Typing')
-    rust.save!
+    rust = Post.create!(title: 'Rust')
+    rust.taggings.create!(tag: Tag.create(name: 'Programming_Language'))
+    rust.taggings.create!(tag: Tag.create(name: 'Static_Typing'))
 
     assert_equal 'Ruby', ruby.title
     assert_equal %w[Programming_Language Dynamic_Typing], ruby.tag_names
