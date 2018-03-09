@@ -37,17 +37,22 @@ class TemporaryModel::Test < ActiveSupport::TestCase
     belongs_to :taggable, polymorphic: true
   end
 
+  setup do
+    @ruby = Post.create!(title: 'Ruby')
+    @ruby.taggings.create!(tag: Tag.create(name: 'Programming_Language'))
+    @ruby.taggings.create!(tag: Tag.create(name: 'Dynamic_Typing'))
+
+    @rust = Post.create!(title: 'Rust')
+    @rust.taggings.create!(tag: Tag.create(name: 'Programming_Language'))
+    @rust.taggings.create!(tag: Tag.create(name: 'Static_Typing'))
+  end
+
   test 'You can define and use temporary classes' do
-    ruby = Post.create!(title: 'Ruby')
-    ruby.taggings.create!(tag: Tag.create(name: 'Programming_Language'))
-    ruby.taggings.create!(tag: Tag.create(name: 'Dynamic_Typing'))
+    assert_equal 'Ruby', @ruby.title
+  end
 
-    rust = Post.create!(title: 'Rust')
-    rust.taggings.create!(tag: Tag.create(name: 'Programming_Language'))
-    rust.taggings.create!(tag: Tag.create(name: 'Static_Typing'))
-
-    assert_equal 'Ruby', ruby.title
-    assert_equal %w[Programming_Language Dynamic_Typing], ruby.tag_names
-    assert_equal [rust], Tag.find_by(name: 'Static_Typing').posts
+  test 'Of course you can also use relation' do
+    assert_equal %w[Programming_Language Dynamic_Typing], @ruby.tag_names
+    assert_equal [@rust], Tag.find_by(name: 'Static_Typing').posts
   end
 end
