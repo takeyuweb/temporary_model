@@ -3,7 +3,7 @@ require 'prime'
 
 class PrimeNumberValidator < ActiveModel::Validator
   def validate(record)
-    record.errors[:value] << ' is not a prime number.' unless Prime.prime?(record.value)
+    record.errors.add(:value, ' is not a prime number.') unless Prime.prime?(record.value)
   end
 end
 

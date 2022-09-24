@@ -12,8 +12,8 @@ class TemporaryModel::ActiveStorageTest < ActiveSupport::TestCase
 
   setup do
     @entry = Entry.new
-    @entry.attachment.attach(create_blob)
-    @entry.attachments.attach([create_blob, create_blob])
+    @entry.attachment.attach(blob_data)
+    @entry.attachments.attach([blob_data, blob_data])
     @entry.save!
   end
 
@@ -27,10 +27,12 @@ class TemporaryModel::ActiveStorageTest < ActiveSupport::TestCase
 
   private
 
-    def create_blob
-      ActiveStorage::Blob.create_after_upload!(io: StringIO.new('Hello world!'),
-                                               filename: 'hello.txt',
-                                               content_type: 'text/plain')
+    def blob_data
+      {
+        io: StringIO.new('Hello world!'),
+        filename: 'hello.txt',
+        content_type: 'text/plain'
+      }
     end
 
 end

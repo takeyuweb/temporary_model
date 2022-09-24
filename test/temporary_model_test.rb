@@ -55,4 +55,8 @@ class TemporaryModel::Test < ActiveSupport::TestCase
     assert_equal %w[Programming_Language Dynamic_Typing], @ruby.tag_names
     assert_equal [@rust], Tag.find_by(name: 'Static_Typing').posts
   end
+
+  test 'Check the class of the temporary class relation' do
+    assert_equal Post, Tag.find_by(name: 'Static_Typing').posts.klass
+  end
 end
