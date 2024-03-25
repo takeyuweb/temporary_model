@@ -40,13 +40,6 @@ module TemporaryModel::TestHelper
           Object.send(:remove_const, temporary_class.name)
         end
       end
-      # テンポラリクラスでリレーションを使っている場合、
-      # ActiveSupport::Dependencies.clear をしないとリレーションのklassに再利用され、
-      #
-      #   Post == Tag.find_by(name: 'Tag').posts.klass # => false
-      #
-      # になる
-      ActiveSupport::Dependencies.clear
       @temporary_classes.clear
     end
   end

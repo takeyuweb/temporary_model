@@ -43,7 +43,7 @@ RSpec.describe 'temporary_model', 'nesting' do
     temporary_model 'Author' do
       define_table do |t|
         t.string :name, default: '', null: false
-        t.references :post, class_name: 'Post'
+        t.references :post
       end
 
       belongs_to :post

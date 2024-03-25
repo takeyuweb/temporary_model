@@ -28,9 +28,12 @@ class TemporaryModel::ActiveStorageTest < ActiveSupport::TestCase
   private
 
     def create_blob
-      ActiveStorage::Blob.create_after_upload!(io: StringIO.new('Hello world!'),
-                                               filename: 'hello.txt',
-                                               content_type: 'text/plain')
+      ActiveStorage::Blob.create_and_upload!(
+        io: StringIO.new('Hello world!'),
+        filename: 'hello.txt',
+        content_type: 'text/plain',
+        service_name: 'local'
+      )
     end
 
 end
